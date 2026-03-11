@@ -25,6 +25,10 @@ public class ReservationController {
             @RequestParam String room_description,
             @RequestParam LocalDateTime reservation_date
     ) {
+        if (room_number < 1 || room_number > 9) {
+            System.out.println("Erreur : le numéro de chambre doit être compris entre 1 et 9");
+            return ReservationList.reservationLists;
+        }
 
         ReservationModel newReservation = new ReservationModel(
                 customer_mail_adress,
