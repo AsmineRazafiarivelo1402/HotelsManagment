@@ -13,11 +13,12 @@ import java.util.List;
 @RestController
 public class ReservationController {
     @GetMapping("/booking")
-    public List<ReservationModel> getReservation(){
-        return ReservationList.reservationLists;
+    ResponseEntity<List<ReservationModel>> getReservation(){
+        return new ResponseEntity<>(ReservationList.reservationLists,HttpStatus.OK);
+
     }
     @PostMapping("/booking")
-    public List<ReservationModel> createReservation(
+    ResponseEntity<List<ReservationModel> > createReservation(
             @RequestParam String customer_name,
             @RequestParam String customer_phone_number,
             @RequestParam String customer_mail_adress,
@@ -27,7 +28,7 @@ public class ReservationController {
     ) {
         if (room_number < 1 || room_number > 9) {
             System.out.println("Erreur : le numéro de chambre doit être compris entre 1 et 9");
-            return ReservationList.reservationLists;
+            return new ResponseEntity<>(ReservationList.reservationLists,HttpStatus.) ;
         }
 
         ReservationModel newReservation = new ReservationModel(
