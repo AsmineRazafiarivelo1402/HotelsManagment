@@ -18,7 +18,7 @@ public class ReservationController {
 
     }
     @PostMapping("/booking")
-    ResponseEntity<List<ReservationModel> > createReservation(
+    ResponseEntity<? extends Object> createReservation(
             @RequestParam String customer_name,
             @RequestParam String customer_phone_number,
             @RequestParam String customer_mail_adress,
@@ -27,8 +27,8 @@ public class ReservationController {
             @RequestParam LocalDateTime reservation_date
     ) {
         if (room_number < 1 || room_number > 9) {
-            System.out.println("Erreur : le numéro de chambre doit être compris entre 1 et 9");
-            return new ResponseEntity<>(ReservationList.reservationLists,HttpStatus.) ;
+         
+            return new ResponseEntity<>("Erreur : le numéro de chambre doit être compris entre 1 et 9",HttpStatus.BAD_REQUEST) ;
         }
 
         ReservationModel newReservation = new ReservationModel(
@@ -42,10 +42,10 @@ public class ReservationController {
 
         ReservationList.reservationLists.add(newReservation);
 
-        return ReservationList.reservationLists;
+        return new ResponseEntity<>(ReservationList.reservationLists, HttpStatus.CREATED) ;
     }
     @PostMapping("/booking/check")
-    public List<ReservationModel> createReservationWithChecking(
+    public Object createReservationWithChecking(
             @RequestParam String customer_name,
             @RequestParam String customer_phone_number,
             @RequestParam String customer_mail_adress,
@@ -54,15 +54,15 @@ public class ReservationController {
             @RequestParam LocalDateTime reservation_date
     ) {
         if (room_number < 1 || room_number > 9) {
-            System.out.println("Erreur : le numéro de chambre doit être compris entre 1 et 9");
-            return ReservationList.reservationLists;
+            return new ResponseEntity<>("Erreur : le numéro de chambre doit être compris entre 1 et 9",HttpStatus.BAD_REQUEST) ;
+
         }
         for (ReservationModel existingReservation : ReservationList.reservationLists) {
             if (existingReservation.getRoom_number() == room_number &&
                     existingReservation.getReservation_date().equals(reservation_date)) {
 
                 System.out.println("La chambre " + room_number + " est déjà réservée pour la date " + reservation_date);
-                return ReservationList.reservationLists;
+                return new ResponseEntity<>("La chambre " + room_number + " est déjà réservée pour la date " + reservation_date,HttpStatus.CONFLICT) ;
             }
         }
 
@@ -77,7 +77,7 @@ public class ReservationController {
 
         ReservationList.reservationLists.add(newReservation);
 
-        return ReservationList.reservationLists;
+        return new ResponseEntity<>(ReservationList.reservationLists, HttpStatus.CREATED) ;
     }
 
 }
